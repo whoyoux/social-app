@@ -12,22 +12,21 @@ const Header = async () => {
 	const isUserLoggedIn = !!session?.user;
 
 	return (
-		<header
-			className={cn(
-				"border-b py-6 mb-10 flex justify-between items-center",
-				defaultStyles.maxWidthWithPadding,
-			)}
-		>
-			<Link href="/">
-				<h1 className="text-2xl font-semibold tracking-tight">social app</h1>
-			</Link>
-			<nav className="flex gap-4 items-center">
-				<Button variant="link">Register</Button>
-				{isUserLoggedIn ? <SignOutButton /> : <SignInButton />}
+		<div className={defaultStyles.maxWidthWithPadding}>
+			<header
+				className={cn("border-b py-6 mb-10 flex justify-between items-center")}
+			>
+				<Link href="/">
+					<h1 className="text-2xl font-semibold tracking-tight">social app</h1>
+				</Link>
+				<nav className="flex gap-4 items-center">
+					<Button variant="link">Register</Button>
+					{isUserLoggedIn ? <SignOutButton /> : <SignInButton />}
 
-				<ThemeSwitcher />
-			</nav>
-		</header>
+					<ThemeSwitcher />
+				</nav>
+			</header>
+		</div>
 	);
 };
 
