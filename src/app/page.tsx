@@ -1,10 +1,9 @@
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import Image from "next/image";
+import { db } from "@/db";
+import { accounts } from "@/db/schema";
 
-export default function Home() {
-	return (
-		<main>
-			<ThemeSwitcher />
-		</main>
-	);
+export default async function Home() {
+	const accountsFound = await db.select().from(accounts);
+	console.log(accountsFound);
+	return <section>home page</section>;
 }

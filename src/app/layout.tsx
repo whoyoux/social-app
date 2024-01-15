@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import { defaultStyles } from "@/config/default-styles";
+import Header from "@/components/header/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +32,8 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					{children}
+					<Header />
+					<main className={defaultStyles.maxWidthWithPadding}>{children}</main>
 				</ThemeProvider>
 			</body>
 		</html>
