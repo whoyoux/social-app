@@ -4,13 +4,16 @@ import {
 	text,
 	primaryKey,
 	integer,
+	uuid,
+	bigserial,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 
 export const pgTable = pgTableCreator((name) => `social-app_${name}`);
 
 export const posts = pgTable("post", {
-	id: text("id").notNull().primaryKey(),
+	id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
+	uuid: uuid("uuid").defaultRandom().notNull().unique(),
 	title: text("title").notNull(),
 	content: text("content").notNull(),
 	authorId: text("authorId")

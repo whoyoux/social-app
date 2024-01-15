@@ -20,7 +20,9 @@ const Header = async () => {
 					<h1 className="text-2xl font-semibold tracking-tight">social app</h1>
 				</Link>
 				<nav className="flex gap-4 items-center">
-					<Button variant="link">Register</Button>
+					<Link href="/account">
+						<Button variant="link">My account</Button>
+					</Link>
 					{isUserLoggedIn ? <SignOutButton /> : <SignInButton />}
 
 					<ThemeSwitcher />
