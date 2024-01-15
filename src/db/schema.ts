@@ -7,7 +7,19 @@ import {
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 
-const pgTable = pgTableCreator((name) => `social-app_${name}`);
+export const pgTable = pgTableCreator((name) => `social-app_${name}`);
+
+export const posts = pgTable("post", {
+	id: text("id").notNull().primaryKey(),
+	title: text("title").notNull(),
+	content: text("content").notNull(),
+	authorId: text("authorId")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	createdAt: timestamp("createdAt", { withTimezone: true })
+		.notNull()
+		.defaultNow(),
+});
 
 export const users = pgTable("user", {
 	id: text("id").notNull().primaryKey(),

@@ -1,9 +1,8 @@
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { db } from "@/db";
-import { accounts } from "@/db/schema";
+import { users } from "@/db/schema";
 
 export default async function Home() {
-	const accountsFound = await db.select().from(accounts);
-	console.log(accountsFound);
+	// const accountsFound = await db.select().from(users);
+	// console.log(accountsFound);
 	return <section>home page</section>;
 }

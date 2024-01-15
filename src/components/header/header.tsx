@@ -4,8 +4,13 @@ import React from "react";
 import { ThemeSwitcher } from "../theme-switcher";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { auth, signIn, signOut } from "@/lib/auth";
 
-const Header = () => {
+const Header = async () => {
+	const session = await auth();
+
+	const isUserLoggedIn = !!session?.user;
+
 	return (
 		<header
 			className={cn(
@@ -18,10 +23,37 @@ const Header = () => {
 			</Link>
 			<nav className="flex gap-4 items-center">
 				<Button variant="link">Register</Button>
-				<Button>Login</Button>
+				{isUserLoggedIn ? <SignOutButton /> : <SignInButton />}
+
 				<ThemeSwitcher />
 			</nav>
 		</header>
+	);
+};
+
+const SignOutButton = async () => {
+	return (
+		<form
+			action={async () => {
+				"use server";
+				await signOut({ redirectTo: "/" });
+			}}
+		>
+			<Button type="submit">Sign out</Button>
+		</form>
+	);
+};
+
+const SignInButton = async () => {
+	return (
+		<form
+			action={async () => {
+				"use server";
+				await signIn("discord");
+			}}
+		>
+			<Button type="submit">Login</Button>
+		</form>
 	);
 };
 
