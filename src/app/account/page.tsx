@@ -6,10 +6,11 @@ import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { eq, sql } from "drizzle-orm";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const AccountPage = async () => {
 	const session = await auth();
-	if (!session) return null;
+	if (!session) redirect("/");
 	const myPostsRows = await db
 		.select()
 		.from(posts)
