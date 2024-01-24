@@ -16,6 +16,7 @@ export const posts = pgTable("post", {
 	uuid: uuid("uuid").defaultRandom().notNull().unique(),
 	title: text("title").notNull(),
 	content: text("content").notNull(),
+	fileUrl: text("fileUrl"),
 	authorId: text("authorId")
 		.notNull()
 		.references(() => users.id, { onDelete: "cascade" }),

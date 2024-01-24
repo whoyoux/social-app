@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { posts } from "@/db/schema";
 import { sql } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
+import Link from "next/link";
 
 export default async function Home() {
 	unstable_noStore();
@@ -18,8 +19,10 @@ export default async function Home() {
 				<ul className="flex flex-col gap-4 mt-4">
 					{postsRows.map((post) => (
 						<li key={post.id} className="w-full border rounded-lg p-4">
-							<h3 className="text-xl font-medium">{post.title}</h3>
-							<p className="mt-2">{post.content}</p>
+							<Link href={`/post/${post.uuid}`}>
+								<h3 className="text-xl font-medium">{post.title}</h3>
+							</Link>
+							<p className="mt-2 truncate max-w-[80vw]">{post.content}</p>
 							<p className="mt-4">
 								{new Date(post.createdAt).toLocaleString()}
 							</p>

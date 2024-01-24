@@ -39,6 +39,7 @@ const CreatePost = () => {
 		const formData = new FormData();
 		formData.append("title", values.title);
 		formData.append("content", values.content);
+		if (values.file) formData.append("file", values.file);
 
 		setIsCreating(true);
 		const result = await createPost(formData);
@@ -50,8 +51,6 @@ const CreatePost = () => {
 		} else {
 			toast.error(result.error);
 		}
-
-		console.log(result);
 	}
 
 	return (
@@ -84,6 +83,41 @@ const CreatePost = () => {
 							</FormControl>
 							<FormDescription>
 								This is your public display name.
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				{/* <UploadButton
+					endpoint="imageUploader"
+					onClientUploadComplete={(res) => {
+						// Do something with the response
+						console.log("Files: ", res);
+						alert("Upload Completed");
+					}}
+					onUploadError={(error: Error) => {
+						// Do something with the error.
+						alert(`ERROR! ${error.message}`);
+					}}
+				/> */}
+				<FormField
+					control={form.control}
+					name="file"
+					render={({ field: { onChange, ref, name, onBlur } }) => (
+						<FormItem>
+							<FormLabel>File</FormLabel>
+							<FormControl>
+								<Input
+									type="file"
+									ref={ref}
+									name={name}
+									onBlur={onBlur}
+									onChange={(e) => onChange(e.target.files?.[0])}
+									disabled
+								/>
+							</FormControl>
+							<FormDescription>
+								We only accept image and video files.
 							</FormDescription>
 							<FormMessage />
 						</FormItem>
