@@ -1,6 +1,7 @@
 import CreatePost from "@/components/create-post";
 import { db } from "@/db";
 import { posts } from "@/db/schema";
+import { auth } from "@/lib/auth";
 import { sql } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
 import Link from "next/link";
@@ -11,10 +12,12 @@ export default async function Home() {
 		.select()
 		.from(posts)
 		.orderBy(sql`${posts.createdAt} desc`);
+
+	const session = await auth();
 	return (
-		<section>
-			<CreatePost />
-			<div className="py-10">
+		<section className="flex flex-col gap-8">
+			{session && <CreatePost />}
+			<div className="">
 				<h2 className="text-2xl font-semibold">Posts</h2>
 				<ul className="flex flex-col gap-4 mt-4">
 					{postsRows.map((post) => (
