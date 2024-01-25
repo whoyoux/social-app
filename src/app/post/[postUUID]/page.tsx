@@ -4,7 +4,10 @@ import { posts, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+
+import EditPostDialog from "@/components/edit-post-dialog";
+import DeletePostDialog from "@/components/delete-post-dialog";
 
 const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 	const postRows = await db
@@ -21,39 +24,22 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 
 	const isAuthor = session?.user?.id === author.id;
 
-	const deletePost = async (formData: FormData) => {
-		"use server";
-
-		const postUUID = formData.get("postUUID") as string;
-		const session = await auth();
-
-		if (!session) return;
-
-		const postRows = await db
-			.select()
-			.from(posts)
-			.where(eq(posts.uuid, postUUID))
-			.innerJoin(users, eq(posts.authorId, users.id));
-
-		if (!postRows || !postRows[0]) return;
-		if (postRows[0].user.id !== session.user.id) return;
-
-		await db.delete(posts).where(eq(posts.uuid, postUUID));
-		redirect("/account");
-	};
-
 	return (
 		<div className="flex flex-col gap-8">
 			<div className="w-full flex flex-col gap-4 border-b pb-5">
 				<div className="flex items-center justify-between">
 					<h1 className="text-4xl font-medium">{post.title}</h1>
 					{isAuthor && (
-						<form action={deletePost}>
-							<input type="hidden" name="postUUID" value={post.uuid} />
-							<Button size="icon" variant="destructive">
-								<Trash2 />
-							</Button>
-						</form>
+						<div className="flex items-center gap-2">
+							<EditPostDialog
+								postUUID={post.uuid}
+								initialContent={post.content}
+								initialTitle={post.title}
+								//force rerender after edit with fresh data
+								key={`${post.title}-${post.content}`}
+							/>
+							<DeletePostDialog postUUID={post.uuid} />
+						</div>
 					)}
 				</div>
 				<p className="text-xl">{post.content}</p>

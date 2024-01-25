@@ -1,10 +1,12 @@
 "use server";
 import { db } from "@/db";
-import { posts } from "@/db/schema";
+import { posts, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { utapi } from "@/server/uploadthing";
-import { createPostFormSchema } from "@/validators/post";
+import { createPostFormSchema, updatePostFormSchema } from "@/validators/post";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export type ResponseCreatePost =
 	| {
@@ -68,6 +70,99 @@ export const createPost = async (
 	console.log(result);
 
 	revalidatePath("/");
+
+	return { success: true };
+};
+
+export const deletePost = async (formData: FormData) => {
+	const postUUID = formData.get("postUUID") as string;
+	const session = await auth();
+
+	if (!session) return;
+
+	const postRows = await db
+		.select()
+		.from(posts)
+		.where(eq(posts.uuid, postUUID))
+		.innerJoin(users, eq(posts.authorId, users.id));
+
+	if (!postRows || !postRows[0]) return;
+	if (postRows[0].user.id !== session.user.id) return;
+
+	await db.delete(posts).where(eq(posts.uuid, postUUID));
+	redirect("/account");
+};
+
+export type ResponseUpdatePost =
+	| {
+			success: true;
+	  }
+	| {
+			success: false;
+			error: string;
+	  };
+
+export const updatePost = async (
+	formData: FormData,
+	postUUID: string,
+): Promise<ResponseUpdatePost> => {
+	const parsedFormData = updatePostFormSchema.safeParse(
+		Object.fromEntries(formData.entries()),
+	);
+
+	if (!parsedFormData.success) {
+		return {
+			success: false,
+			error: "Invalid form data",
+		};
+	}
+
+	if (!postUUID || typeof postUUID !== "string") {
+		return {
+			success: false,
+			error: "Invalid post UUID",
+		};
+	}
+
+	const session = await auth();
+	if (!session) {
+		return {
+			success: false,
+			error: "Not authenticated",
+		};
+	}
+
+	const { title, content } = parsedFormData.data;
+
+	const postRows = await db
+		.select()
+		.from(posts)
+		.where(eq(posts.uuid, postUUID))
+		.innerJoin(users, eq(posts.authorId, users.id));
+
+	if (!postRows || !postRows[0]) {
+		return {
+			success: false,
+			error: "Post not found",
+		};
+	}
+
+	if (postRows[0].user.id !== session.user.id) {
+		return {
+			success: false,
+			error: "Not authorized",
+		};
+	}
+
+	await db
+		.update(posts)
+		.set({
+			title,
+			content,
+		})
+		.where(eq(posts.uuid, postUUID));
+
+	revalidatePath(`/posts/${postUUID}`);
 
 	return { success: true };
 };
