@@ -7,19 +7,9 @@ import { createPostFormSchema, updatePostFormSchema } from "@/validators/post";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Response } from "./types";
 
-export type ResponseCreatePost =
-	| {
-			success: true;
-	  }
-	| {
-			success: false;
-			error: string;
-	  };
-
-export const createPost = async (
-	formData: FormData,
-): Promise<ResponseCreatePost> => {
+export const createPost = async (formData: FormData): Promise<Response> => {
 	const parsedFormData = createPostFormSchema.safeParse(
 		Object.fromEntries(formData.entries()),
 	);
@@ -76,6 +66,7 @@ export const createPost = async (
 
 export const deletePost = async (formData: FormData) => {
 	const postUUID = formData.get("postUUID") as string;
+	if (!postUUID) return;
 	const session = await auth();
 
 	if (!session) return;
@@ -93,19 +84,10 @@ export const deletePost = async (formData: FormData) => {
 	redirect("/account");
 };
 
-export type ResponseUpdatePost =
-	| {
-			success: true;
-	  }
-	| {
-			success: false;
-			error: string;
-	  };
-
 export const updatePost = async (
 	formData: FormData,
 	postUUID: string,
-): Promise<ResponseUpdatePost> => {
+): Promise<Response> => {
 	const parsedFormData = updatePostFormSchema.safeParse(
 		Object.fromEntries(formData.entries()),
 	);
@@ -159,6 +141,7 @@ export const updatePost = async (
 		.set({
 			title,
 			content,
+			edited: true,
 		})
 		.where(eq(posts.uuid, postUUID));
 

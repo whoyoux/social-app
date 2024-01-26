@@ -6,8 +6,10 @@ import {
 	integer,
 	uuid,
 	bigserial,
+	boolean,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
+import { relations } from "drizzle-orm";
 
 export const pgTable = pgTableCreator((name) => `social-app_${name}`);
 
@@ -16,14 +18,74 @@ export const posts = pgTable("post", {
 	uuid: uuid("uuid").defaultRandom().notNull().unique(),
 	title: text("title").notNull(),
 	content: text("content").notNull(),
-	fileUrl: text("fileUrl"),
-	authorId: text("authorId")
+	fileUrl: text("file_url"),
+	edited: boolean("edited").notNull().default(false),
+	authorId: text("author_id")
 		.notNull()
 		.references(() => users.id, { onDelete: "cascade" }),
-	createdAt: timestamp("createdAt", { withTimezone: true })
+	createdAt: timestamp("created_at", { withTimezone: true })
 		.notNull()
 		.defaultNow(),
 });
+
+export const comments = pgTable("comment", {
+	id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
+	uuid: uuid("uuid").defaultRandom().notNull().unique(),
+	content: text("content").notNull(),
+	edited: boolean("edited").notNull().default(false),
+	authorId: text("author_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	postUUID: uuid("post_uuid")
+		.notNull()
+		.references(() => posts.uuid, { onDelete: "cascade" }),
+	createdAt: timestamp("created_at", { withTimezone: true })
+		.notNull()
+		.defaultNow(),
+
+	parentUUID: uuid("parent_uuid"),
+});
+
+export const commentsRelations = relations(comments, ({ one }) => ({
+	parent: one(comments, {
+		fields: [comments.parentUUID],
+		references: [comments.uuid],
+	}),
+}));
+
+export const postLikes = pgTable(
+	"post_like",
+	{
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		postUUID: uuid("post_uuid")
+			.notNull()
+			.references(() => posts.uuid, { onDelete: "cascade" }),
+	},
+	(like) => {
+		return {
+			compoundKey: primaryKey({ columns: [like.userId, like.postUUID] }),
+		};
+	},
+);
+
+export const commentLikes = pgTable(
+	"comment_like",
+	{
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		commentUUID: uuid("comment_uuid")
+			.notNull()
+			.references(() => comments.uuid, { onDelete: "cascade" }),
+	},
+	(like) => {
+		return {
+			compoundKey: primaryKey({ columns: [like.userId, like.commentUUID] }),
+		};
+	},
+);
 
 export const users = pgTable("user", {
 	id: text("id").notNull().primaryKey(),

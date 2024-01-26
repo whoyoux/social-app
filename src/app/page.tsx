@@ -1,17 +1,12 @@
 import CreatePost from "@/components/create-post";
-import { db } from "@/db";
-import { posts } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { sql } from "drizzle-orm";
+import { getPosts } from "@/services/post-service";
 import { unstable_noStore } from "next/cache";
 import Link from "next/link";
 
 export default async function Home() {
 	unstable_noStore();
-	const postsRows = await db
-		.select()
-		.from(posts)
-		.orderBy(sql`${posts.createdAt} desc`);
+	const postsRows = await getPosts();
 
 	const session = await auth();
 	return (
@@ -25,6 +20,9 @@ export default async function Home() {
 							<Link href={`/post/${post.uuid}`}>
 								<h3 className="text-xl font-medium">{post.title}</h3>
 							</Link>
+							{post.edited && (
+								<h4 className="text-sm text-muted-foreground">edited</h4>
+							)}
 							<p className="mt-2 truncate max-w-[80vw]">{post.content}</p>
 							<p className="mt-4">
 								{new Date(post.createdAt).toLocaleString()}
