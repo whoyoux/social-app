@@ -18,9 +18,7 @@ const LoadingPostPage = async () => {
 			</div>
 			<div className="flex flex-col gap-4">
 				<h3 className="text-2xl font-semibold">Comments:</h3>
-				<ul>
-					<h4 className="text-xl font-medium">No comments yet.</h4>
-				</ul>
+				<Skeleton className="w-[100px] h-[40px] rounded-lg" />
 			</div>
 		</div>
 	);

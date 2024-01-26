@@ -1,4 +1,4 @@
-import CreatePost from "@/components/create-post";
+import CreatePost from "@/components/post/create-post";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/db";
 import { posts } from "@/db/schema";

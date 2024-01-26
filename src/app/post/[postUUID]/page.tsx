@@ -1,17 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
-import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { notFound } from "next/navigation";
 
-import EditPostDialog from "@/components/edit-post-dialog";
-import DeletePostDialog from "@/components/delete-post-dialog";
+import DeletePostDialog from "@/components/post/delete-post-dialog";
+import EditPostDialog from "@/components/post/edit-post-dialog";
 
-import AddCommentForm from "@/components/add-comment-form";
+import AddCommentForm from "@/components/comment/add-comment-form";
 
-import Comment from "@/components/comment";
-import { getPostWithUser } from "@/services/post-service";
-import { getCommentsFromPost } from "@/services/comment-service";
+import Comment from "@/components/comment/comment";
 import { formatCommentsToEachParent } from "@/lib/format-comments-from-db";
+import { getCommentsFromPost } from "@/services/comment-service";
+import { getPostWithUser } from "@/services/post-service";
 import { unstable_noStore } from "next/cache";
 
 const PostPage = async ({ params }: { params: { postUUID: string } }) => {
@@ -76,7 +74,7 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 				<h3 className="text-2xl font-semibold">Comments:</h3>
 				<AddCommentForm postUUID={post.uuid} isLoggedIn={!!session} />
 				{!!commentsToRender && (
-					<ul>
+					<ul className="flex flex-col gap-4">
 						{isCommentsEmpty && (
 							<h4 className="text-xl font-medium">No comments yet.</h4>
 						)}
@@ -85,6 +83,8 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 								key={comment.comment.uuid}
 								comment={comment.comment}
 								user={comment.user}
+								userId={session?.user?.id}
+								isLoggedIn={!!session}
 							/>
 						))}
 					</ul>

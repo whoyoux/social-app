@@ -1,4 +1,4 @@
-import CreatePost from "@/components/create-post";
+import CreatePost from "@/components/post/create-post";
 import { auth } from "@/lib/auth";
 import { getPosts } from "@/services/post-service";
 import { unstable_noStore } from "next/cache";
