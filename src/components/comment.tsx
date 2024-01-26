@@ -30,7 +30,8 @@ const Comment = async ({ comment, user }: CommentPropsWithChildren) => {
 			<p className="text-normal">{comment.content}</p>
 
 			<span className="text-sm">
-				{new Date(comment.createdAt).toLocaleString()} by {user.name}
+				{new Date(comment.createdAt).toLocaleString()} by{" "}
+				<span className={cn(isAuthor ?? "text-green-500")}>{user.name}</span>
 			</span>
 
 			<div className="flex items-center gap-2">
@@ -38,6 +39,7 @@ const Comment = async ({ comment, user }: CommentPropsWithChildren) => {
 					<AddCommentDialog
 						postUUID={comment.postUUID}
 						parentUUID={comment.uuid}
+						isLoggedIn={!!session}
 					/>
 				)}
 

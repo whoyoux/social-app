@@ -25,14 +25,14 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
 
 const AddCommentDialog = ({
 	postUUID,
 	parentUUID,
-}: { postUUID: string; parentUUID?: string }) => {
+	isLoggedIn,
+}: { postUUID: string; parentUUID?: string; isLoggedIn: boolean }) => {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isAdding, setIsAdding] = useState(false);
 
@@ -66,7 +66,12 @@ const AddCommentDialog = ({
 	return (
 		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 			<DialogTrigger asChild>
-				<Button size="sm" variant="outline">
+				<Button
+					size="sm"
+					variant="outline"
+					disabled={!isLoggedIn}
+					aria-disabled={!isLoggedIn}
+				>
 					Reply
 				</Button>
 			</DialogTrigger>
@@ -94,13 +99,6 @@ const AddCommentDialog = ({
 						<Button className="w-32">Submit</Button>
 					</form>
 				</Form>
-
-				{/* <form className="flex flex-col gap-4" action={addComment}>
-					<input type="hidden" name="postUUID" value={postUUID} />
-					<input type="hidden" name="parentUUID" value={parentUUID} />
-					<Textarea placeholder="Leave a comment..." name="content" />
-					<Button className="w-32">Submit</Button>
-				</form> */}
 			</DialogContent>
 		</Dialog>
 	);

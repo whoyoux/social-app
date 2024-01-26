@@ -21,7 +21,7 @@ const DeleteCommentDialog = ({
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button size="sm" variant="destructive" className="aspect-square p-0">
+				<Button size="sm" variant="outline" className="aspect-square p-0">
 					<Trash2 className="w-4 h-4" />
 				</Button>
 			</AlertDialogTrigger>

@@ -55,7 +55,7 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 				<span className="text-sm">
 					{new Date(post.createdAt).toLocaleString()} by {author.name}
 				</span>
-				<div className="flex gap-4">
+				{/* <div className="flex gap-4">
 					<Button
 						variant="secondary"
 						className="hover:bg-green-500 flex items-center gap-2 hover:text-white"
@@ -70,11 +70,11 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 						<span>999</span>
 						<ThumbsDown />
 					</Button>
-				</div>
+				</div> */}
 			</div>
 			<div className="flex flex-col gap-4">
 				<h3 className="text-2xl font-semibold">Comments:</h3>
-				<AddCommentForm postUUID={post.uuid} />
+				<AddCommentForm postUUID={post.uuid} isLoggedIn={!!session} />
 				{!!commentsToRender && (
 					<ul>
 						{isCommentsEmpty && (

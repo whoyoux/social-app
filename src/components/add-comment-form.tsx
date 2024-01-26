@@ -25,15 +25,16 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
 const AddCommentForm = ({
 	postUUID,
 	parentUUID,
+	isLoggedIn,
 }: {
 	postUUID: string;
 	parentUUID?: string;
+	isLoggedIn: boolean;
 }) => {
 	const [isAdding, setIsAdding] = useState(false);
 
@@ -75,13 +76,24 @@ const AddCommentForm = ({
 					render={({ field }) => (
 						<FormItem>
 							<FormControl>
-								<Textarea placeholder="Leave a comment" {...field} />
+								<Textarea
+									placeholder="Leave a comment"
+									{...field}
+									disabled={!isLoggedIn}
+									aria-disabled={!isLoggedIn}
+								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-				<Button className="w-32">Submit</Button>
+				<Button
+					className="w-32"
+					disabled={!isLoggedIn}
+					aria-disabled={!isLoggedIn}
+				>
+					Submit
+				</Button>
 			</form>
 		</Form>
 	);
