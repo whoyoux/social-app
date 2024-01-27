@@ -6,10 +6,19 @@ import EditPostDialog from "@/components/post/edit-post-dialog";
 
 import AddCommentForm from "@/components/comment/add-comment-form";
 
+import { toggleLikeToPost } from "@/actions/like";
 import Comment from "@/components/comment/comment";
+import ToggleLikePostButton from "@/components/post/toggle-like-post-button";
+import { Button } from "@/components/ui/button";
 import { formatCommentsToEachParent } from "@/lib/format-comments-from-db";
+import { cn } from "@/lib/utils";
 import { getCommentsFromPost } from "@/services/comment-service";
+import {
+	checkIfUserLikedPost,
+	getLikesFromPost,
+} from "@/services/like-service";
 import { getPostWithUser } from "@/services/post-service";
+import { ThumbsUp } from "lucide-react";
 import { unstable_noStore } from "next/cache";
 
 const PostPage = async ({ params }: { params: { postUUID: string } }) => {
@@ -27,6 +36,13 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 	const commentsToRender = formatCommentsToEachParent(commentsFromDB);
 
 	const isCommentsEmpty = commentsFromDB.length === 0;
+
+	const likesCount = await getLikesFromPost(post.uuid);
+
+	let didUserLike = false;
+	if (session) {
+		didUserLike = await checkIfUserLikedPost(post.uuid, session.user.id);
+	}
 
 	return (
 		<div className="flex flex-col gap-8">
@@ -53,22 +69,11 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 				<span className="text-sm">
 					{new Date(post.createdAt).toLocaleString()} by {author.name}
 				</span>
-				{/* <div className="flex gap-4">
-					<Button
-						variant="secondary"
-						className="hover:bg-green-500 flex items-center gap-2 hover:text-white"
-					>
-						<span>999</span>
-						<ThumbsUp />
-					</Button>
-					<Button
-						variant="secondary"
-						className="hover:bg-red-500 flex items-center gap-2 hover:text-white"
-					>
-						<span>999</span>
-						<ThumbsDown />
-					</Button>
-				</div> */}
+				<ToggleLikePostButton
+					postUUID={post.uuid}
+					likesCount={likesCount}
+					didUserLike={didUserLike}
+				/>
 			</div>
 			<div className="flex flex-col gap-4">
 				<h3 className="text-2xl font-semibold">Comments:</h3>
