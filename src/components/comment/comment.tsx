@@ -1,8 +1,15 @@
 "use client";
 
+import { useState } from "react";
+
+import AddCommentDialog from "@/components/comment/add-comment-dialog";
+import DeleteCommentDialog from "@/components/comment/delete-comment-dialog";
+import { Button } from "@/components/ui/button";
+
 import { comments, users } from "@/db/schema";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 type Comment = typeof comments.$inferSelect;
 type User = typeof users.$inferSelect;
@@ -11,12 +18,6 @@ type CommentPropsWithChildren = {
 	user: User;
 	comment: Comment & { children: CommentPropsWithChildren[] };
 };
-
-import AddCommentDialog from "@/components/comment/add-comment-dialog";
-import DeleteCommentDialog from "@/components/comment/delete-comment-dialog";
-import Image from "next/image";
-import { useState } from "react";
-import { Button } from "../ui/button";
 
 type CommentProps = {
 	userId: string | undefined;
