@@ -18,7 +18,6 @@ import {
 	getLikesFromPost,
 } from "@/services/like-service";
 import { getPostWithUser } from "@/services/post-service";
-import { ThumbsUp } from "lucide-react";
 import { unstable_noStore } from "next/cache";
 
 const PostPage = async ({ params }: { params: { postUUID: string } }) => {

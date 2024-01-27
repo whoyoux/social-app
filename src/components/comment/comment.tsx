@@ -11,6 +11,7 @@ import { comments, users } from "@/db/schema";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import EditCommentDialog from "./edit-comment-dialog";
+import ToggleLikeComment from "./toggle-like-comment";
 
 type Comment = typeof comments.$inferSelect;
 type User = typeof users.$inferSelect;
@@ -83,6 +84,10 @@ const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 							initialContentValue={comment.content}
 							isLoggedIn={isLoggedIn}
 						/>
+						{/* <ToggleLikeComment
+							isLoggedIn={isLoggedIn}
+							commentUUID={comment.uuid}
+						/> */}
 						<DeleteCommentDialog
 							commentUUID={comment.uuid}
 							postUUID={comment.postUUID}
