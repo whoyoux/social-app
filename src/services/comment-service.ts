@@ -7,8 +7,7 @@ export const getCommentsFromPost = async (postUUID: string) => {
 		.select()
 		.from(comments)
 		.where(eq(comments.postUUID, postUUID))
-		.innerJoin(users, eq(comments.authorId, users.id))
-		.orderBy(sql`${comments.createdAt} desc`);
+		.innerJoin(users, eq(comments.authorId, users.id));
 
 	return result;
 };

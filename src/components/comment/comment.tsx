@@ -1,3 +1,5 @@
+"use client";
+
 import { comments, users } from "@/db/schema";
 
 import { cn } from "@/lib/utils";
@@ -13,6 +15,8 @@ type CommentPropsWithChildren = {
 import AddCommentDialog from "@/components/comment/add-comment-dialog";
 import DeleteCommentDialog from "@/components/comment/delete-comment-dialog";
 import Image from "next/image";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 type CommentProps = {
 	userId: string | undefined;
@@ -21,8 +25,9 @@ type CommentProps = {
 
 const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 	const isReply = !!comment.parentUUID;
-
 	const hasReplies = comment.children.length > 0;
+
+	const [showReplies, setShowReplies] = useState(false);
 
 	const isAuthor = userId === user.id;
 
@@ -34,14 +39,21 @@ const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 			)}
 		>
 			<div className="flex flex-row items-center gap-4 items-strech">
-				{/* <img src={user.image ?? ""} alt="user img" className="w-8 h-8" /> */}
-				<Image src={user.image ?? ""} alt="user img" width={24} height={24} />
+				<div className="w-full aspect-square max-w-[32px] relative">
+					<Image
+						src={user.image ?? ""}
+						alt="user img"
+						fill
+						className="rounded-lg"
+					/>
+				</div>
+
 				<div>
 					<p className="text-xl">{comment.content}</p>
 
-					<span className="text-sm">
+					<span className="text-sm" suppressHydrationWarning>
 						{new Date(comment.createdAt).toLocaleString()} by{" "}
-						<span className={cn(isAuthor && "text-green-500 font-medium")}>
+						<span className={cn(isAuthor && "text-green-500", "font-medium")}>
 							{user.name}
 						</span>
 					</span>
@@ -63,8 +75,23 @@ const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 					/>
 				)}
 			</div>
+			{}
+
+			<div>
+				{hasReplies &&
+					(showReplies ? (
+						<Button variant="link" onClick={() => setShowReplies(false)}>
+							Hide replies
+						</Button>
+					) : (
+						<Button variant="link" onClick={() => setShowReplies(true)}>
+							Show replies
+						</Button>
+					))}
+			</div>
 
 			{hasReplies &&
+				showReplies &&
 				comment.children.map((child) => (
 					<Comment
 						key={child.comment.uuid}

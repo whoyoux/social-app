@@ -42,5 +42,26 @@ export const formatCommentsToEachParent = (commentsFromDB: Comment[]) => {
 		(obj) => !obj.comment.parentUUID,
 	);
 
+	//Sort replies by the oldest to newset
+	const sortCommentsByDate = (comment: CommentPropsWithChildren) => {
+		comment.comment.children.sort(
+			(a, b) =>
+				new Date(a.comment.createdAt).getTime() -
+				new Date(b.comment.createdAt).getTime(),
+		);
+
+		if (!comment.comment.children.length) return;
+		comment.comment.children.forEach(sortCommentsByDate);
+	};
+
+	commentsToRender.forEach(sortCommentsByDate);
+
+	//Sort comments by the newest to oldest
+	commentsToRender.sort(
+		(a, b) =>
+			new Date(b.comment.createdAt).getTime() -
+			new Date(a.comment.createdAt).getTime(),
+	);
+
 	return commentsToRender;
 };
