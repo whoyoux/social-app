@@ -74,7 +74,7 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 				<h3 className="text-2xl font-semibold">Comments:</h3>
 				<AddCommentForm postUUID={post.uuid} isLoggedIn={!!session} />
 				{!!commentsToRender && (
-					<ul className="flex flex-col gap-4">
+					<div className="flex flex-col gap-4">
 						{isCommentsEmpty && (
 							<h4 className="text-xl font-medium">No comments yet.</h4>
 						)}
@@ -87,7 +87,7 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 								isLoggedIn={!!session}
 							/>
 						))}
-					</ul>
+					</div>
 				)}
 			</div>
 		</div>

@@ -10,6 +10,7 @@ import { comments, users } from "@/db/schema";
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import EditCommentDialog from "./edit-comment-dialog";
 
 type Comment = typeof comments.$inferSelect;
 type User = typeof users.$inferSelect;
@@ -46,19 +47,23 @@ const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 						src={user.image ?? ""}
 						alt="user img"
 						fill
+						sizes="32px"
 						className="rounded-lg"
 					/>
 				</div>
 
-				<div>
+				<div suppressHydrationWarning>
 					<p className="text-xl">{comment.content}</p>
 
-					<span className="text-sm" suppressHydrationWarning>
+					<div className="text-sm mt-2" suppressHydrationWarning>
+						{comment.edited && (
+							<span className="text-muted-foreground">edited</span>
+						)}{" "}
 						{new Date(comment.createdAt).toLocaleString()} by{" "}
 						<span className={cn(isAuthor && "text-green-500", "font-medium")}>
 							{user.name}
 						</span>
-					</span>
+					</div>
 				</div>
 			</div>
 			<div className="flex items-center gap-2">
@@ -71,10 +76,18 @@ const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 				)}
 
 				{isAuthor && (
-					<DeleteCommentDialog
-						commentUUID={comment.uuid}
-						postUUID={comment.postUUID}
-					/>
+					<>
+						<EditCommentDialog
+							commentUUID={comment.uuid}
+							postUUID={comment.postUUID}
+							initialContentValue={comment.content}
+							isLoggedIn={isLoggedIn}
+						/>
+						<DeleteCommentDialog
+							commentUUID={comment.uuid}
+							postUUID={comment.postUUID}
+						/>
+					</>
 				)}
 			</div>
 			{}
