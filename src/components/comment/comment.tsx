@@ -35,10 +35,11 @@ const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 		<div
 			className={cn(
 				isReply && "ml-4",
-				"border-l px-4 my-2 flex flex-col gap-2",
+				"px-4 my-2 flex flex-col gap-2",
+				hasReplies && "border-l",
 			)}
 		>
-			<div className="flex flex-row items-center gap-4 items-strech">
+			<div className="flex flex-row gap-4 items-start">
 				<div className="w-full aspect-square max-w-[32px] relative">
 					<Image
 						src={user.image ?? ""}
