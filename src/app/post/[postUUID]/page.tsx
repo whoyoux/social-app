@@ -6,12 +6,9 @@ import EditPostDialog from "@/components/post/edit-post-dialog";
 
 import AddCommentForm from "@/components/comment/add-comment-form";
 
-import { toggleLikeToPost } from "@/actions/like";
 import Comment from "@/components/comment/comment";
 import ToggleLikePostButton from "@/components/post/toggle-like-post-button";
-import { Button } from "@/components/ui/button";
 import { formatCommentsToEachParent } from "@/lib/format-comments-from-db";
-import { cn } from "@/lib/utils";
 import { getCommentsFromPost } from "@/services/comment-service";
 import {
 	checkIfUserLikedPost,
@@ -19,6 +16,7 @@ import {
 } from "@/services/like-service";
 import { getPostWithUser } from "@/services/post-service";
 import { unstable_noStore } from "next/cache";
+import Image from "next/image";
 
 const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 	unstable_noStore();
@@ -64,6 +62,18 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 						</div>
 					)}
 				</div>
+				{post.fileUrl && (
+					<div className="w-full relative h-[500px] max-w-screen-md">
+						<Image
+							src={post.fileUrl}
+							alt={post.title}
+							fill
+							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+							className="rounded-lg object-cover"
+							quality={100}
+						/>
+					</div>
+				)}
 				<p className="text-xl">{post.content}</p>
 				<span className="text-sm">
 					{new Date(post.createdAt).toLocaleString()} by {author.name}

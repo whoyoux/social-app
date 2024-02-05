@@ -11,7 +11,6 @@ import { comments, users } from "@/db/schema";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import EditCommentDialog from "./edit-comment-dialog";
-import ToggleLikeComment from "./toggle-like-comment";
 
 type Comment = typeof comments.$inferSelect;
 type User = typeof users.$inferSelect;
@@ -38,7 +37,7 @@ const Comment = ({ comment, user, userId, isLoggedIn }: CommentProps) => {
 		<div
 			className={cn(
 				isReply && "ml-4",
-				"px-4 my-2 flex flex-col gap-2",
+				"px-4 my-2 flex flex-col gap-2 min-w-[300px]",
 				hasReplies && "border-l",
 			)}
 		>

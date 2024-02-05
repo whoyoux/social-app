@@ -1,15 +1,15 @@
-import {
-	timestamp,
-	pgTableCreator,
-	text,
-	primaryKey,
-	integer,
-	uuid,
-	bigserial,
-	boolean,
-} from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
+import {
+	bigserial,
+	boolean,
+	integer,
+	pgTableCreator,
+	primaryKey,
+	text,
+	timestamp,
+	uuid,
+} from "drizzle-orm/pg-core";
 
 export const pgTable = pgTableCreator((name) => `social-app_${name}`);
 
@@ -138,3 +138,12 @@ export const verificationTokens = pgTable(
 		compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
 	}),
 );
+
+export const uploadedFiles = pgTable("uploaded_files", {
+	id: bigserial("id", { mode: "number" }).primaryKey().notNull(),
+	userId: text("user_id")
+		.notNull()
+		.references(() => users.id, { onDelete: "cascade" }),
+	fileName: text("file_name").notNull(),
+	fileUrl: text("file_url").notNull(),
+});

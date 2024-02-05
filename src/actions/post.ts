@@ -2,7 +2,6 @@
 import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { utapi } from "@/server/uploadthing";
 import { createPostFormSchema, updatePostFormSchema } from "@/validators/post";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -29,30 +28,14 @@ export const createPost = async (formData: FormData): Promise<Response> => {
 		};
 	}
 
-	const { title, content, file } = parsedFormData.data;
-
-	let url: string | undefined;
-
-	// if (file) {
-	// 	try {
-	// 		const res = await utapi.uploadFiles([file], {
-	// 			metadata: {
-	// 				authorId: session.user.id,
-	// 			},
-	// 		});
-
-	// 		url = res[0].data?.url;
-	// 	} catch (err) {
-	// 		console.log(err);
-	// 	}
-	// }
+	const { title, content, fileUrl } = parsedFormData.data;
 
 	const result = await db
 		.insert(posts)
 		.values({
 			title,
 			content,
-			fileUrl: url,
+			fileUrl,
 			authorId: session.user.id,
 		})
 		.returning();
