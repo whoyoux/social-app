@@ -1,10 +1,10 @@
+import { Button } from "@/components/ui/button";
 import { defaultStyles } from "@/config/default-styles";
+import { auth, signIn, signOut } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import React from "react";
 import { ThemeSwitcher } from "../theme-switcher";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { auth, signIn, signOut } from "@/lib/auth";
 
 const Header = async () => {
 	const session = await auth();
@@ -20,9 +20,11 @@ const Header = async () => {
 					<h1 className="text-2xl font-semibold tracking-tight">social app</h1>
 				</Link>
 				<nav className="flex gap-4 items-center">
-					<Link href="/account">
-						<Button variant="link">My account</Button>
-					</Link>
+					{isUserLoggedIn && (
+						<Link href={`/profile/${session?.user?.id}`}>
+							<Button variant="link">My account</Button>
+						</Link>
+					)}
 					{isUserLoggedIn ? <SignOutButton /> : <SignInButton />}
 
 					<ThemeSwitcher />
