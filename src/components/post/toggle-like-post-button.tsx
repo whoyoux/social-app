@@ -11,6 +11,7 @@ type ToggleLikePostButtonProps = {
 	postUUID: string;
 	likesCount: number;
 	didUserLike: boolean;
+	isLoggedIn: boolean;
 };
 
 type OptimisticLike = {
@@ -22,6 +23,7 @@ const ToggleLikePostButton = ({
 	postUUID,
 	likesCount,
 	didUserLike,
+	isLoggedIn,
 }: ToggleLikePostButtonProps) => {
 	const [optimisticState, setOptimisticState] = useOptimistic<OptimisticLike>({
 		likesCount,
@@ -48,6 +50,8 @@ const ToggleLikePostButton = ({
 					"hover:bg-green-500 flex items-center gap-2 hover:text-white",
 					optimisticState.didUserLike && "bg-green-500 text-background",
 				)}
+				disabled={!isLoggedIn}
+				aria-disabled={!isLoggedIn}
 			>
 				{optimisticState.likesCount > 0 && (
 					<span>{optimisticState.likesCount}</span>

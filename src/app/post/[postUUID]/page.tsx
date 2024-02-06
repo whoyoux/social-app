@@ -82,6 +82,7 @@ const PostPage = async ({ params }: { params: { postUUID: string } }) => {
 					postUUID={post.uuid}
 					likesCount={likesCount}
 					didUserLike={didUserLike}
+					isLoggedIn={!!session}
 				/>
 			</div>
 			<div className="flex flex-col gap-4">
