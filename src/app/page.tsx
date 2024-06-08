@@ -13,7 +13,6 @@ export default async function Home() {
 		<section className="flex flex-col gap-8">
 			{session && <CreatePost />}
 			<div className="">
-				<h2 className="text-2xl font-semibold">Posts</h2>
 				<div className="flex flex-col gap-4 mt-4">
 					{postsRows.map((post) => (
 						<Post key={post.uuid} post={post} />

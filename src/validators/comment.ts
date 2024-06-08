@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const addCommentFormSchema = z.object({
 	content: z.string().min(5).max(1000),

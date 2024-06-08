@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { posts } from "@/db/schema";
-import { InferSelectModel } from "drizzle-orm";
+import type { posts } from "@/db/schema";
+import type { InferSelectModel } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,7 +10,7 @@ type PostProps = {
 
 const Post = ({ post }: PostProps) => {
 	return (
-		<div className="w-full border rounded-lg p-8">
+		<div className="w-full border rounded-lg p-8 bg-card">
 			<Link href={`/post/${post.uuid}`}>
 				<h3 className="text-2xl font-medium hover:underline">{post.title}</h3>
 			</Link>

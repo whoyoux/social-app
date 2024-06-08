@@ -1,3 +1,4 @@
+"server-only";
 import { db } from "@/db";
 import { postLikes } from "@/db/schema";
 import { and, eq } from "drizzle-orm";

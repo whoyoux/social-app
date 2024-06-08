@@ -9,7 +9,7 @@ import {
 } from "@/validators/comment";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { Response } from "./types";
+import type { Response } from "./types";
 
 export const addComment = async (formData: FormData): Promise<Response> => {
 	const parsedFormData = addCommentToDBSchema.safeParse(

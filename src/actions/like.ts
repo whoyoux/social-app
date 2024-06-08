@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { toggleLikeToPostSchema } from "@/validators/like";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { Response } from "./types";
+import type { Response } from "./types";
 
 export const toggleLikeToPost = async (
 	formData: FormData,

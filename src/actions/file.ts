@@ -7,7 +7,7 @@ const utapi = new UTApi();
 import { auth } from "@/lib/auth";
 import { deleteFileByFileUrl, getFileByFileUrl } from "@/services/file-service";
 import { deleteFileFormSchema } from "@/validators/file";
-import { Response } from "./types";
+import type { Response } from "./types";
 
 export const deleteFile = async (formData: FormData): Promise<Response> => {
 	const parsedFormData = deleteFileFormSchema.safeParse(

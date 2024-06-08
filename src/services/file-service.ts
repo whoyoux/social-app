@@ -1,3 +1,5 @@
+"server-only";
+
 import { db } from "@/db";
 import { uploadedFiles } from "@/db/schema";
 import { eq } from "drizzle-orm";

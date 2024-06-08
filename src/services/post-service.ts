@@ -1,3 +1,4 @@
+"server-only";
 import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";

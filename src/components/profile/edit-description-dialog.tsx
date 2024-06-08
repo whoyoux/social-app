@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { updatePost } from "@/actions/post";
+import { editDesc } from "@/actions/profile";
 import {
 	Form,
 	FormControl,
@@ -27,40 +28,33 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { editDescSchema } from "@/validators/profile";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type EditPostDialogProps = {
-	initialTitle: string;
-	initialContent: string;
-	postUUID: string;
+type EditDescriptionDialogProps = {
+	initialDesc: string | null;
 };
 
-const EditPostDialog = ({
-	initialTitle,
-	initialContent,
-	postUUID,
-}: EditPostDialogProps) => {
+const EditDescriptionDialog = (props: EditDescriptionDialogProps) => {
 	const [isUpdating, setIsUpdating] = useState(false);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-	const form = useForm<z.infer<typeof updatePostFormSchema>>({
-		resolver: zodResolver(updatePostFormSchema),
+	const form = useForm<z.infer<typeof editDescSchema>>({
+		resolver: zodResolver(editDescSchema),
 		defaultValues: {
-			title: initialTitle,
-			content: initialContent,
+			description: props.initialDesc ?? "",
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof updatePostFormSchema>) {
+	async function onSubmit(values: z.infer<typeof editDescSchema>) {
 		if (isUpdating) return; // prevent double submit
 
 		const formData = new FormData();
-		formData.append("title", values.title);
-		formData.append("content", values.content);
+		formData.append("description", values.description);
 
 		setIsUpdating(true);
-		const result = await updatePost(formData, postUUID);
+		const result = await editDesc(formData);
 		setIsUpdating(false);
 
 		if (result.success) {
@@ -80,7 +74,7 @@ const EditPostDialog = ({
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Edit post</DialogTitle>
+					<DialogTitle>Edit description</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
 					<form
@@ -89,25 +83,12 @@ const EditPostDialog = ({
 					>
 						<FormField
 							control={form.control}
-							name="title"
+							name="description"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Title</FormLabel>
+									<FormLabel>Description</FormLabel>
 									<FormControl>
-										<Input placeholder="Enter a title" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="content"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Content</FormLabel>
-									<FormControl>
-										<Textarea placeholder="What's on your mind?" {...field} />
+										<Textarea placeholder="Enter a description" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -128,4 +109,4 @@ const EditPostDialog = ({
 	);
 };
 
-export default EditPostDialog;
+export default EditDescriptionDialog;
